@@ -10,3 +10,5 @@ tasks:
   - build: |
       cd notes
       latexmk -pdf -gg -file-line-error -halt-on-error -interaction=nonstopmode -shell-escape
+artifacts:
+  - notes/abstract_algebra.pdf
