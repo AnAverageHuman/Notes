@@ -26,6 +26,7 @@
 %\newtheorem{claim}{Claim}
 \newtheorem*{comment}{Comment}
 
+\NewDocumentCommand{\abs}{m}{\left\lvert#1\right\rvert}
 \NewDocumentCommand{\norm}{m}{\left\lVert#1\right\rVert}
 
 \begin{document}
@@ -108,9 +109,9 @@ It was originally used to approximate solutions of ordinary differential equatio
 Choosing a good $x_0$ is an unresolved problem, but we can usually figure out a good estimate from the problem formulation.
 
 \begin{theorem}[Functional iteration for a single equation (scalar valued)]\label{thm:iterscalar}
-  Let $g(x)$ satisfy the Lipschitz condition $|g(x) - g(y)| \leq \lambda |x - y|$ for all $x, y \in I$,
+  Let $g(x)$ satisfy the Lipschitz condition $\abs{g(x) - g(y)} \leq \lambda \abs{x - y}$ for all $x, y \in I$,
   where $I = [x_0 - \rho, x_0 + \rho]$ and $0 \leq \lambda < 1$ ($\lambda$ is the Lipschitz constant).
-  Furthermore, let the original estimate $x_0$ be such that $|x_0 - g(x_0)| \leq (1 - \lambda) \rho$.
+  Furthermore, let the original estimate $x_0$ be such that $\abs{x_0 - g(x_0)} \leq (1 - \lambda) \rho$.
   Then the following results hold: \begin{enumerate}
     \item $x_i \in I$ for all $i$,
     \item $\lim\limits_{i \to \infty} x_i = \alpha$ (existence of a fixed point),
@@ -123,44 +124,44 @@ Choosing a good $x_0$ is an unresolved problem, but we can usually figure out a 
         \begin{enumerate}
           \item Let $x_0 \in I$.
             Since $g(x_0) = x_1$, we have \begin{align*}
-              |x_0 - g(x_0)| &= |x_0 - x_1| \\
-                             &\leq (1 - \lambda) \rho && \text{by our second condition} \\
-                             &\leq \rho && \text{as $0 \leq \lambda < 1$, thus $1 - \lambda < 1$.}
+              \abs{x_0 - g(x_0)} &= \abs{x_0 - x_1} \\
+                                 &\leq (1 - \lambda) \rho && \text{by our second condition} \\
+                                 &\leq \rho && \text{as $0 \leq \lambda < 1$, thus $1 - \lambda < 1$.}
             \end{align*}
-          \item Suppose $|x_i - x_0| \leq \rho$ for all $i \leq m$; that is, $x_i \in I$.
+          \item Suppose $\abs{x_i - x_0} \leq \rho$ for all $i \leq m$; that is, $x_i \in I$.
             By the Lipschitz condition, we have that for all $i \leq m$, \begin{align*}
-              |g(x_i) - g(x_{i - 1})| &\leq \lambda |x_i - x_{i - 1}| \\
-                                      &\leq \lambda |g(x_{i - 1}) - g(x_{i - 2})| \\
-                                      &\leq \lambda^2 |x_{i - 1} - x_{i - 2}| && \text{again by the Lipschitz condition} \\
-                                      &\vdotswithin{\leq} \\
-                                      &\leq \lambda^m |x_i - x_0| \\
-                                      &\leq \lambda^m (1 - \lambda) \rho.
+              \abs{g(x_i) - g(x_{i - 1})} &\leq \lambda \abs{x_i - x_{i - 1}} \\
+                                          &\leq \lambda \abs{g(x_{i - 1}) - g(x_{i - 2})} \\
+                                          &\leq \lambda^2 \abs{x_{i - 1} - x_{i - 2}} && \text{again by the Lipschitz condition} \\
+                                          &\vdotswithin{\leq} \\
+                                          &\leq \lambda^m \abs{x_i - x_0} \\
+                                          &\leq \lambda^m (1 - \lambda) \rho.
             \end{align*}
             To show $x_{m + 1} \in I$, consider \begin{align*}
-              |x_{m + 1} - x_0| &= |(x_{m + 1} - x_m) + (x_m - x_{m - 1}) + \cdots + (x_1 - x_0)| \\
-                                &\leq |x_{m + 1} - x_m| + |x_m - x_{m - 1}| + \cdots + |x_1 - x_0| \\
-                                &\leq \lambda^m (1 - \lambda) \rho + \lambda^m (1 - \lambda) \rho + \cdots + \lambda^m (1 - \lambda) \rho \\
-                                &= (\lambda^m + \lambda^{m - 1} + \cdots + 1) (1 - \lambda) \rho \\
-                                &= \left( \frac{1 - \lambda^{m + 1}}{1 - \lambda} \right) (1 - \lambda) \rho \\
-                                &= \left( 1 - \lambda^{m + 1} \right) \rho \\
-                                &\leq \rho
+              \abs{x_{m + 1} - x_0} &= \abs{(x_{m + 1} - x_m) + (x_m - x_{m - 1}) + \cdots + (x_1 - x_0)} \\
+                                    &\leq \abs{x_{m + 1} - x_m} + \abs{x_m - x_{m - 1}} + \cdots + \abs{x_1 - x_0} \\
+                                    &\leq \lambda^m (1 - \lambda) \rho + \lambda^m (1 - \lambda) \rho + \cdots + \lambda^m (1 - \lambda) \rho \\
+                                    &= (\lambda^m + \lambda^{m - 1} + \cdots + 1) (1 - \lambda) \rho \\
+                                    &= \left( \frac{1 - \lambda^{m + 1}}{1 - \lambda} \right) (1 - \lambda) \rho \\
+                                    &= \left( 1 - \lambda^{m + 1} \right) \rho \\
+                                    &\leq \rho
             \end{align*} as $0 \leq \lambda < 1$, thus $1 - \lambda < 1$.
         \end{enumerate}
         Thus $x_{m + 1} \in I$, completing the proof by induction.
 
       \item To show the existence of a limit for the sequence $\{ x_i \}$, we first show that the sequence is Cauchy.
-        Given $\epsilon > 0$, we find $N(\epsilon)$ such that for $m, m + p > N$, we have $|x_m -  x_{m + p}| < \epsilon$.
+        Given $\epsilon > 0$, we find $N(\epsilon)$ such that for $m, m + p > N$, we have $\abs{x_m -  x_{m + p}} < \epsilon$.
         First, examine \begin{align*}
-          |x_m - x_{m + p}| &= |(x_m - x_{m + 1}) + (x_{m + 1} - x_{m + 2}) + \cdots + (x_{m + p - 1} - x_{m + p})|.
+          \abs{x_m - x_{m + p}} &= \abs{(x_m - x_{m + 1}) + (x_{m + 1} - x_{m + 2}) + \cdots + (x_{m + p - 1} - x_{m + p})}.
           \intertext{By the triangle inequality, we have}
-          |x_m - x_{m + p}| &\leq |x_m - x_{m + 1}| + |x_{m + 1} - x_{m + 2}| + \cdots + |x_{m + p - 1} - x_{m + p}| \\
-                            &\leq (\lambda^m + \lambda^{m + 1} + \cdots + \lambda^{m + p - 1}) (1 - \lambda) \rho \\
-                            &= (1 - \lambda^p) \lambda^m \rho \\
-                            &\leq \lambda^m \rho.
+          \abs{x_m - x_{m + p}} &\leq \abs{x_m - x_{m + 1}} + \abs{x_{m + 1} - x_{m + 2}} + \cdots + \abs{x_{m + p - 1} - x_{m + p}} \\
+                                &\leq (\lambda^m + \lambda^{m + 1} + \cdots + \lambda^{m + p - 1}) (1 - \lambda) \rho \\
+                                &= (1 - \lambda^p) \lambda^m \rho \\
+                                &\leq \lambda^m \rho.
         \end{align*}
-        So if we want $|x_m - x_{m +p}| < \epsilon$, take $N$ such that $\lambda^N \rho < \epsilon$.
+        So if we want $\abs{x_m - x_{m +p}} < \epsilon$, take $N$ such that $\lambda^N \rho < \epsilon$.
         For instance, let $N = \left\lceil \frac{\log \frac{\epsilon}{p}}{\log \lambda} \right\rceil$.
-        Thus we are guaranteed that $|x_m - x_{m + p}| < \epsilon$ for $m, m + p > N$.
+        Thus we are guaranteed that $\abs{x_m - x_{m + p}} < \epsilon$ for $m, m + p > N$.
         Hence the sequence is Cauchy, and $\lim\limits_{i \to \infty} x_i = \alpha$ since $I$ is a complete metric space.
         %[for homework, show that if $\mathbb{R}$ is complete and $I$ is closed, then $I$ is complete]
         Furthermore, we have that \begin{align*}
@@ -172,22 +173,22 @@ Choosing a good $x_0$ is an unresolved problem, but we can usually figure out a 
         \begin{comment}
           How does $x_i$ approach our fixed point $\alpha$?
           Look at how far our initial guess is from $\alpha$, and the number of iterations we make: \begin{align*}
-            |x_m - \alpha| &= |g(x_{m - 1}) - g(\alpha)| \\
-                           &\leq \lambda |x_{m - 1} - \alpha| && \text{by the Lipschitz condition} \\
-                           &= \lambda |g(x_{m - 2}) - g(\alpha)| \\
-                           &\leq \lambda^2 |x_{m - 2} - \alpha| \\
-                           &\vdotswithin{\leq} && \text{using the Lipschitz inequality}\\
-                           &\leq \lambda^m |x_0 - \alpha| \\
-                           &\leq \lambda^m  \rho,
+            \abs{x_m - \alpha} &= \abs{g(x_{m - 1}) - g(\alpha)} \\
+                               &\leq \lambda \abs{x_{m - 1} - \alpha} && \text{by the Lipschitz condition} \\
+                               &= \lambda \abs{g(x_{m - 2}) - g(\alpha)} \\
+                               &\leq \lambda^2 \abs{x_{m - 2} - \alpha} \\
+                               &\vdotswithin{\leq} && \text{using the Lipschitz inequality}\\
+                               &\leq \lambda^m \abs{x_0 - \alpha} \\
+                               &\leq \lambda^m  \rho,
           \end{align*} so each iterate is contained within a smaller and smaller set surrounding $\alpha$.
         \end{comment}
 
       \item To show uniqueness, suppose $\alpha$ and $\beta$ are both fixed points in $I$.
         Then we have that \begin{align*}
-          |\alpha - \beta| &= |g(\alpha) - g(\beta)| \\
-                           &\leq \lambda |\alpha - \beta|
+          \abs{\alpha - \beta} &= \abs{g(\alpha) - g(\beta)} \\
+                               &\leq \lambda \abs{\alpha - \beta}
         \end{align*} by the Lipschitz condition.
-        But since $\lambda < 1$, it must be the case that $|\alpha - \beta| = 0$.
+        But since $\lambda < 1$, it must be the case that $\abs{\alpha - \beta} = 0$.
         \qedhere
     \end{enumerate}
   \end{proof}
@@ -198,7 +199,7 @@ What does this mean for differentiable functions?
 Differentiable functions are closely related to Lipschitz, but they are not necessarily Lipschitz.
 For example, there is no Lipschitz condition number that will satisfy the inequality for $x^2$, where $x \in \mathbb{R}$.
 \begin{corollary}\label{cor:iterscalar}
-  If $|g'(x)| \leq \lambda < 1$ for $|x - x_0| \leq \rho$, and $|x_0 - g(x_0)| \leq (1 - \lambda) \rho$, then results (1), (2), and (3) of Theorem~\ref{thm:iterscalar} hold.
+  If $\abs{g'(x)} \leq \lambda < 1$ for $\abs{x - x_0} \leq \rho$, and $\abs{x_0 - g(x_0)} \leq (1 - \lambda) \rho$, then results (1), (2), and (3) of Theorem~\ref{thm:iterscalar} hold.
   \begin{proof}
     The Mean Value Theorem gives us a way to go between secant lines (our Lipschitz condition) and tangent lines (our differentiable function).
     It states that if $f$ is differentiable on the interval $[a, b]$, then there exists $\xi$ such that $a < \xi < b$ and $f'(\xi) = \frac{f(b) - f(a)}{b - a}$.
@@ -206,7 +207,7 @@ For example, there is no Lipschitz condition number that will satisfy the inequa
     Let $x, y \in I$, and assume $x < y$ without loss of generality.
     By the Mean Value Theorem, we have \begin{align*}
       g(x) - g(y) &= g'(\xi)(x - y) \\
-      |g(x) - g(y)| &\leq \lambda |x - y| && \text{since $|g'(\xi)| \leq \lambda$}
+      \abs{g(x) - g(y)} &\leq \lambda \abs{x - y} && \text{since $\abs{g'(\xi)} \leq \lambda$}
     \end{align*} for $x < \xi < y$, so our Lipschitz condition number is at most $\lambda < 1$ for all $x, y \in I$.
     All the results of Theorem~\ref{thm:iterscalar} follow.
   \end{proof}
@@ -215,13 +216,13 @@ For example, there is no Lipschitz condition number that will satisfy the inequa
 \subsection{Visualizing Iterative Methods}
 To understand our convergence theorem, consider $\frac{\Delta y}{\Delta x} = \lambda$ and $\frac{\Delta y}{\Delta x} = - \lambda$ on the interval $[x_0 - \rho, x_0 + \rho]$, both passing through the point $(x_0, g(x_0))$ to form a \enquote{bowtie}.
 Notice that at $x = x_0 + \rho$, $g(x) = g(x_0) + \lambda \rho$.
-Consider $y = x$, and let $\epsilon = |x_0 - g(x_0)|$.
+Consider $y = x$, and let $\epsilon = \abs{x_0 - g(x_0)}$.
 Then at $x = x_0 + \rho$, we have that the distance between $y = x$ and $\frac{\Delta y}{\Delta x} = \lambda$ is $\rho - \epsilon - \lambda \rho$.
 [diagram omitted] % TODO?
 
 If $\lambda > 1$, then our bowtie becomes too tall, and thus $y = x$ does not intersect with the top part of the triangle.
 If $\lambda < 1$, but $\rho - \epsilon - \lambda \rho < 0 \iff \epsilon > (1 - \lambda) \rho$, then $y = x$ does not intersect with the top part of the triangle as well.
-  Thus $\lambda < 1$ and $|x_0 - g(x_0)| < (1 - \lambda) \rho$ guarantees us a fixed point in $I$.
+  Thus $\lambda < 1$ and $\abs{x_0 - g(x_0)} < (1 - \lambda) \rho$ guarantees us a fixed point in $I$.
   There is a second mirrored case discussing the bottom part of the triangle omitted for brevity.
 
   Why do we want this?
@@ -232,7 +233,7 @@ If $\lambda < 1$, but $\rho - \epsilon - \lambda \rho < 0 \iff \epsilon > (1 - \
   \begin{theorem}[Convergence Theorem 2]\label{thm:convergence2}
     If \begin{enumerate}
       \item[$(\star)$] $g(x)$ has a fixed point $\alpha$ in the interval $I = [\alpha - \rho, \alpha + \rho]$ and
-      \item[$(\star\star)$] $g$ satisfies $|g(x) - g(\alpha)| \leq \lambda |x - \alpha|$ for all $x \in I$ with $\lambda < 1$,
+      \item[$(\star\star)$] $g$ satisfies $\abs{g(x) - g(\alpha)} \leq \lambda \abs{x - \alpha}$ for all $x \in I$ with $\lambda < 1$,
       \end{enumerate} then for all choice of $x_0 \in I$, \begin{enumerate}
       \item $x_i \in I$ for all $i$,
       \item $\lim\limits_{i \to \infty} x_i = \alpha$,
@@ -244,21 +245,21 @@ If $\lambda < 1$, but $\rho - \epsilon - \lambda \rho < 0 \iff \epsilon > (1 - \
           \item $x_0 \in I$ by our hypothesis.
           \item $x_i \in I$ for $i \leq m - 1$.
             Since $g(\alpha) = \alpha$, we have \begin{align*}
-              |\alpha - x_m| &= |g(\alpha) - g(x_{m - 1})| \\
-                             &\leq \lambda |\alpha - x_{m - 1}| && \text{by hypothesis $(\star\star)$} \\
-                             &\leq \lambda \rho \\
-                             &< \rho && \text{as $\lambda < 1$},
+              \abs{\alpha - x_m} &= \abs{g(\alpha) - g(x_{m - 1})} \\
+                                 &\leq \lambda \abs{\alpha - x_{m - 1}} && \text{by hypothesis $(\star\star)$} \\
+                                 &\leq \lambda \rho \\
+                                 &< \rho && \text{as $\lambda < 1$},
             \end{align*} so $x_m \in I$.
             Furthermore, if we look at these as errors, the $m$\textsuperscript{th} error is bounded above by the $(m - 1)$\textsuperscript{th} error (as $\lambda < 1$).
         \end{enumerate}
 
       \item We have that \begin{align*}
-          |\alpha - x_m| &\leq \lambda |\alpha - x_{m - 1}| \\
-                         &\vdotswithin{\leq} && \text{applying $(\star\star)$ recursively} \\
-                         &\leq \lambda^m |\alpha - x_0|,
+          \abs{\alpha - x_m} &\leq \lambda \abs{\alpha - x_{m - 1}} \\
+                             &\vdotswithin{\leq} && \text{applying $(\star\star)$ recursively} \\
+                             &\leq \lambda^m \abs{\alpha - x_0},
           \end{align*} so \begin{align*}
-          \lim_{i \to \infty} |\alpha - x_i| &\leq \lim_{i \to \infty} \lambda^i |\alpha - x_0| \\
-                                             &= 0 && \text{since $\lambda^i \to 0$ as $i \to \infty$},
+          \lim_{i \to \infty} \abs{\alpha - x_i} &\leq \lim_{i \to \infty} \lambda^i \abs{\alpha - x_0} \\
+                                                 &= 0 && \text{since $\lambda^i \to 0$ as $i \to \infty$},
         \end{align*} thus it must be the case that $\lim\limits_{i \to \infty} x_i = \alpha$.
 
       \item Uniqueness follows as in the proof for Theorem~\ref{thm:iterscalar}.
@@ -269,14 +270,14 @@ If $\lambda < 1$, but $\rho - \epsilon - \lambda \rho < 0 \iff \epsilon > (1 - \
 Now we prove a corollary similar to Corollary~\ref{cor:iterscalar} for Theorem~\ref{thm:iterscalar}.
 This will highlight the role of $g'$ in the utility of our iterative scheme.
 \begin{corollary}\label{cor:upperboundg'}
-  If we replace premise $(\star\star)$ with $|g'(x)| \leq \lambda < 1$ for $x \in I$, then results (1), (2), and (3) of Theorem~\ref{thm:convergence2} hold.
+  If we replace premise $(\star\star)$ with $\abs{g'(x)} \leq \lambda < 1$ for $x \in I$, then results (1), (2), and (3) of Theorem~\ref{thm:convergence2} hold.
   \begin{proof}
     As in the proof of Corollary~\ref{cor:iterscalar}, we will use the Mean Value Theorem.
     By the Mean Value Theorem, there exists $\xi_{i - 1}$ between $\alpha$ and $x_{i - 1}$ such that \begin{align*}
       g'(\xi_{i - 1}) &= \frac{g(\alpha) - g(x_{i - 1})}{m - x_{i - 1}} \\
                       &= \frac{\alpha - x_i}{\alpha - x_{i - 1}} \\
-      |g'(\xi_{i - 1})| |\alpha - x_{i - 1}| &= |\alpha - x_i| \\
-      \lambda |\alpha - x_{i - 1}| &\geq  && \text{by our hypothesis.}
+      \abs{g'(\xi_{i - 1})} \abs{\alpha - x_{i - 1}} &= \abs{\alpha - x_i} \\
+      \lambda \abs{\alpha - x_{i - 1}} &\geq  && \text{by our hypothesis.}
     \end{align*}
     Thus our Lipschitz condition is satisfied, and Theorem~\ref{thm:convergence2} will follow.
   \end{proof}
@@ -288,8 +289,8 @@ This will highlight the role of $g'$ in the utility of our iterative scheme.
     \toprule
   & Theorem~\ref{thm:iterscalar} & Theorem~\ref{thm:convergence2} \\
   \midrule
-    \multirow{2}{*}{Conditions} & $|g(x) - g(y)| \leq \lambda |x - y|$ & $|g(x) - g(\alpha)| \leq \lambda |x - \alpha|$ \\
-                                & $|x_0 - g(x_0)| \leq (1 - \lambda) \rho$ & $x_0 \in I$ \\
+    \multirow{2}{*}{Conditions} & $\abs{g(x) - g(y)} \leq \lambda \abs{x - y}$ & $\abs{g(x) - g(\alpha)} \leq \lambda \abs{x - \alpha}$ \\
+                                & $\abs{x_0 - g(x_0)} \leq (1 - \lambda) \rho$ & $x_0 \in I$ \\
                                 \midrule
     Result & $\exists! \alpha$ & $\lim\limits_{i \to \infty} \lambda_i = \alpha$ for all $x_0 \in I$ \\
     \bottomrule
@@ -302,14 +303,14 @@ When the condition number is smaller, we assume that our iterates approach our f
 
 If $x_i$ converges to $\alpha$, then $\xi_i$ converges to $\alpha$ as well as it is is between $x_i$ and $\alpha$.
 From this convergence and our previous Mean Value Theorem iterated, \begin{align*}
-  |\alpha - x_{k + m}| &= |g'(\xi_{k + m - 1})| |\alpha - x_{k + m - 1}| \\
-                       &\vdotswithin{=} \\
-                       &= |g'(\xi_{k + m - 1})| \dots |g'(\xi_k)| |\alpha - x_k| \\
-                       &\approx {|g'(\alpha)|}^m |\alpha - x_k|
+  \abs{\alpha - x_{k + m}} &= \abs{g'(\xi_{k + m - 1})} \abs{\alpha - x_{k + m - 1}} \\
+                           &\vdotswithin{=} \\
+                           &= \abs{g'(\xi_{k + m - 1})} \dots \abs{g'(\xi_k)} \abs{\alpha - x_k} \\
+                           &\approx \abs{g'(\alpha)}^m \abs{\alpha - x_k}
 \end{align*} for large enough $x_i$ so that $\xi_k$ is close to $\alpha$.
 Thus our iterates get closer by approximately a factor of $g'(\alpha)$ each iteration.
 
-We call $\hat{\lambda} \equiv |g'(\alpha)|$ the (asymptotic) convergence factor.
+We call $\hat{\lambda} \equiv \abs{g'(\alpha)}$ the (asymptotic) convergence factor.
 When $g'(\alpha) \neq 0$, $g$ is a first order method.
 
 \subsection{Error Propagation}
@@ -345,38 +346,38 @@ The accuracy of the approximation is determined by $\delta$, the maximum value o
     \item[$(\star)$] in the interval $I = [\alpha - \rho_0, \alpha + \rho_0]$,
     \item[$(\star\star)$] where $\rho_0$ is given by $0 < \rho_0 \leq \rho - \frac{\delta}{1 - \lambda}$ (taking care of the \enquote{properly posed} problem).
   \end{enumerate}
-  Then the iterates $X_i$ with errors bounded by $\delta$ lie in the interval $|\alpha - X_i| < \rho$ and $|\alpha - X_i| \leq \frac{\delta}{1 - \lambda} + \lambda^i \left( \rho_0 - \frac{\delta}{1 - \lambda} \right)$.
+  Then the iterates $X_i$ with errors bounded by $\delta$ lie in the interval $\abs{\alpha - X_i} < \rho$ and $\abs{\alpha - X_i} \leq \frac{\delta}{1 - \lambda} + \lambda^i \left( \rho_0 - \frac{\delta}{1 - \lambda} \right)$.
 
   \begin{proof}
     We prove $X_i \in I$ by induction.
     \begin{enumerate}
       \item First show $X_0 \in I$.
         By rearranging premise $(\star\star)$, we get \begin{align*}
-          |\alpha - X_0| &\leq \rho_0 && \text{by condition $(\star)$} \\
-                         &\leq \rho_0 + \frac{\delta}{1 - \lambda} && \text{as $\frac{\delta}{1 - \lambda}$ is positive} \\
-                         &\leq \rho - \frac{\delta}{1 - \lambda} + \frac{\delta}{1 - \lambda} && \text{by condition $(\star\star)$} \\
-                         &= \rho.
+          \abs{\alpha - X_0} &\leq \rho_0 && \text{by condition $(\star)$} \\
+                             &\leq \rho_0 + \frac{\delta}{1 - \lambda} && \text{as $\frac{\delta}{1 - \lambda}$ is positive} \\
+                             &\leq \rho - \frac{\delta}{1 - \lambda} + \frac{\delta}{1 - \lambda} && \text{by condition $(\star\star)$} \\
+                             &= \rho.
         \end{align*}
 
       \item Now assume $X_i \in I$ for $i \leq m - 1$.
         \begin{align*}
-          |\alpha - X_m| &= |g(\alpha) - \left[ g(X_{m - 1}) + \delta_{m - 1} \right]| \\
-                         &\leq |g(\alpha) - g(X_{m - 1})| + |-\delta_{m - 1}| && \text{by the triangle inequality} \\
-                         &\leq \lambda |\alpha - X_{m - 1}| + \delta \\
-                         &\leq \lambda^2 |\alpha - X_{m - 2}| + \lambda \delta  + \delta && \text{by our Lipschitz condition} \\
-                         &\vdotswithin{\leq} \\
-                         &\leq \lambda^m |\alpha - X_0| + \lambda^{m - 1} \delta + \cdots + \lambda \delta + \delta \\
-                         &= \lambda^m \rho_0 + \left( \frac{1 - \lambda^m}{1 - \lambda} \right) \delta \\
-                         &= \frac{\delta}{1 - \lambda} - \lambda^m \left( \rho_0 - \frac{\delta}{1 - \lambda} \right) && \text{giving us the second result}.
+          \abs{\alpha - X_m} &= \abs{g(\alpha) - \left[ g(X_{m - 1}) + \delta_{m - 1} \right]} \\
+                             &\leq \abs{g(\alpha) - g(X_{m - 1})} + \abs{-\delta_{m - 1}} && \text{by the triangle inequality} \\
+                             &\leq \lambda \abs{\alpha - X_{m - 1}} + \delta \\
+                             &\leq \lambda^2 \abs{\alpha - X_{m - 2}} + \lambda \delta  + \delta && \text{by our Lipschitz condition} \\
+                             &\vdotswithin{\leq} \\
+                             &\leq \lambda^m \abs{\alpha - X_0} + \lambda^{m - 1} \delta + \cdots + \lambda \delta + \delta \\
+                             &= \lambda^m \rho_0 + \left( \frac{1 - \lambda^m}{1 - \lambda} \right) \delta \\
+                             &= \frac{\delta}{1 - \lambda} - \lambda^m \left( \rho_0 - \frac{\delta}{1 - \lambda} \right) && \text{giving us the second result}.
         \end{align*}
         This separates the computational error from the $m$-dependent terms.
     \end{enumerate}
     We still must prove the first result.
     Continuing from before distributing \begin{align*}
-      |\alpha - X_i| &\leq \lambda^i \rho_0 + \left( \frac{1 - \lambda^i}{1 - \lambda} \right) \delta \\
-                     &= \lambda^i \rho_0 + \frac{\delta}{1 - \lambda} - \lambda^i \frac{\delta}{1 - \lambda} \\
-                     &\leq \rho_0 + \frac{\delta}{1 - \lambda} \\
-                     &\leq \rho && \text{by premise $(\star\star)$.}
+      \abs{\alpha - X_i} &\leq \lambda^i \rho_0 + \left( \frac{1 - \lambda^i}{1 - \lambda} \right) \delta \\
+                         &= \lambda^i \rho_0 + \frac{\delta}{1 - \lambda} - \lambda^i \frac{\delta}{1 - \lambda} \\
+                         &\leq \rho_0 + \frac{\delta}{1 - \lambda} \\
+                         &\leq \rho && \text{by premise $(\star\star)$.}
     \end{align*}
     Therefore, $X_i \in I$, and our process is well-defined.
   \end{proof}
@@ -384,16 +385,16 @@ The accuracy of the approximation is determined by $\delta$, the maximum value o
 
 \subsection{Understanding convergence factor}
 How does the convergence factor relate to the number of iterations we need?
-From Theorem~\ref{thm:convergence2} we have $|\alpha - X_{m + k}| \approx \hat{\lambda}^k |\alpha - X_m|$.
-To increase accuracy by $10^{-m}$, we need $\frac{|\alpha - X_{m + k}|}{|\alpha - X_m|} = 10^{-m} \approx \hat{\lambda}^k$, so $k = \frac{m}{\log \frac{1}{\hat{\lambda}}}$.
+From Theorem~\ref{thm:convergence2} we have $\abs{\alpha - X_{m + k}} \approx \hat{\lambda}^k \abs{\alpha - X_m}$.
+To increase accuracy by $10^{-m}$, we need $\frac{\abs{\alpha - X_{m + k}}}{\abs{\alpha - X_m}} = 10^{-m} \approx \hat{\lambda}^k$, so $k = \frac{m}{\log \frac{1}{\hat{\lambda}}}$.
 Taking into account the resolution from machine precision, we only need to iterate up to \begin{displaymath}
   \min\left( \frac{m}{\log \frac{1}{\hat{\lambda}}}, \underbrace{\frac{\log \frac{\delta}{(1 - \hat{\lambda}) \rho_0}}{\log \hat{\lambda}}}_\text{resolution bound} \right)
 \end{displaymath} times.
-However, we can take fewer iterates by breaking this condition from our first order methods: $\hat{\lambda} = |g'(\alpha)| \neq 0$.
+However, we can take fewer iterates by breaking this condition from our first order methods: $\hat{\lambda} = \abs{g'(\alpha)} \neq 0$.
 
 \section{Second and higher order iteration methods}
 To get an intuition of why this helps, suppose $g'(\alpha) = 0$.
-If the slope at our fixed point is zero, we expect the slope around the fixed point to be close to zero, i.e.\ $0 < |g'(x)| \ll 1$ (much less than 1) around $\alpha$.
+If the slope at our fixed point is zero, we expect the slope around the fixed point to be close to zero, i.e.\ $0 < \abs{g'(x)} \ll 1$ (much less than 1) around $\alpha$.
 
 Furthermore, we will assume that $g'(\alpha) = 0$ and $g''(x)$ exists and is bounded in $I \equiv [\alpha - \rho, \alpha + \rho]$.
 Then for all $x \in I$, we can use Taylor expansion to get \begin{align*}
@@ -403,28 +404,28 @@ Then for all $x \in I$, we can use Taylor expansion to get \begin{align*}
 \end{align*} where $\xi$ is between $x$ and $\alpha$ by Taylor's theorem due to our second assumption.
 
 From this result, for any $i > 0$, \begin{align*}
-  \underbrace{|x_i - \alpha|}_\text{$i$\textsuperscript{th} error} &= |g(x_{i - 1}) - g(\alpha)| \\
-                                                                   &= \left\lvert \alpha - g''(\xi_{i - 1}) \frac{{(x_{i - 1} - \alpha)}^2}{2} - \alpha \right\rvert \\
-                                                                   &= \frac{1}{2} \underbrace{\left\vert g''(\xi_{i - 1}) \right\vert}_\text{bounded} {\underbrace{\left\vert x_{i - 1} - \alpha \right\vert}_\text{previous error}}^2
+  \underbrace{\abs{x_i - \alpha}}_\text{$i$\textsuperscript{th} error} &= \abs{g(x_{i - 1}) - g(\alpha)} \\
+                                                                       &= \abs{\alpha - g''(\xi_{i - 1}) \frac{{(x_{i - 1} - \alpha)}^2}{2} - \alpha} \\
+                                                                       &= \frac{1}{2} \underbrace{\left\vert g''(\xi_{i - 1}) \right\vert}_\text{bounded} {\underbrace{\left\vert x_{i - 1} - \alpha \right\vert}_\text{previous error}}^2
 \end{align*} which is a significant improvement.
 
 Assuming that $g''(\alpha) \neq 0$, we call this a second order method.
 
 \subsection{Convergence Factor and Error Propagation}
-Let the bound on $g''$ be denoted as $|g''(x)| \leq 2M$ for all $x \in I$.
+Let the bound on $g''$ be denoted as $\abs{g''(x)} \leq 2M$ for all $x \in I$.
 Then \begin{align*}
-  \underbrace{|x_i - \alpha|}_\text{$i$\textsuperscript{th} error} &\leq \frac{1}{2} (2M) {\left\lvert x_{i - 1} - \alpha \right\rvert}^2 \\
-                                                                   &= M {\left\lvert x_{i - 1} - \alpha \right\rvert}^2 \\
-                                                                   &\leq M \cdot M^2 {\left\lvert x_{i - 2} - \alpha \right\rvert}^4 \\
-                                                                   &\leq M \cdot M^2 \cdot M^4 {\left\lvert x_{i - 3} - \alpha \right\rvert}^8 \\
-                                                                   &\vdotswithin{\leq} && \text{using Taylor expansion} \\
-                                                                   &\leq M^{2^i - 1} {\left\lvert x_0 - \alpha \right\rvert}^{2^i} \\
-                                                                   &\leq {(M \left\lvert x_0 - \alpha \right\rvert)}^{2^i - 1} \underbrace{\left\lvert x_0 - \alpha \right\rvert}_\text{initial error},
+  \underbrace{\abs{x_i - \alpha}}_\text{$i$\textsuperscript{th} error} &\leq \frac{1}{2} (2M) \abs{x_{i - 1} - \alpha}^2 \\
+                                                                       &= M \abs{x_{i - 1} - \alpha}^2 \\
+                                                                       &\leq M \cdot M^2 \abs{x_{i - 2} - \alpha}^4 \\
+                                                                       &\leq M \cdot M^2 \cdot M^4 \abs{x_{i - 3} - \alpha}^8 \\
+                                                                       &\vdotswithin{\leq} && \text{using Taylor expansion} \\
+                                                                       &\leq M^{2^i - 1} \abs{x_0 - \alpha}^{2^i} \\
+                                                                       &\leq {(M \abs{x_0 - \alpha})}^{2^i - 1} \underbrace{\abs{x_0 - \alpha}}_\text{initial error},
 \end{align*}
-so we converge if $M |x_0 - \alpha| = \hat{\lambda} < 1$.
+so we converge if $M \abs{x_0 - \alpha} = \hat{\lambda} < 1$.
 
 Suppose we wanted to reduce error by at least $10^{-m}$.
-Then $|X_{i + k} - \alpha| \leq 10^{-m} |X_i - \alpha|$, and thus $k \approx \frac{1}{\log 2} \log \frac{m}{\log \left( \hat{\lambda} \frac{1}{\rho} \right)}$.
+Then $\abs{X_{i + k} - \alpha} \leq 10^{-m} \abs{X_i - \alpha}$, and thus $k \approx \frac{1}{\log 2} \log \frac{m}{\log \left( \hat{\lambda} \frac{1}{\rho} \right)}$.
 
 \subsection{Comparison to the first order scheme}
 To get equal reduction of error between our first order scheme conversion factor $\hat{\lambda}_1$ and our second order scheme conversion factor $\hat{\lambda}_2$, $\hat{\lambda}_1^{k_1} = \hat{\lambda}_2^{2^{k_2}}$.
@@ -480,9 +481,9 @@ This basically means that the second order scheme is exponentially better than t
   It turns out that for every iteration of a second order scheme, the number of correct digits doubles, assuming $M < 1$ (when $M > 1$ it is asymptotically true).
 
   \begin{proof}
-    Assume that $|x_m - \alpha| \leq 10^{-k_m}$ for all $m \geq m_0$; i.e.\ past this point, our iterates are correct to $k_m$ decimals.
+    Assume that $\abs{x_m - \alpha} \leq 10^{-k_m}$ for all $m \geq m_0$; i.e.\ past this point, our iterates are correct to $k_m$ decimals.
     Then we have that \begin{align*}
-      |x_m - \alpha| &\leq M {\left\vert x_{m - 1} - \alpha \right\vert}^2 \\
+      \abs{x_m - \alpha} &\leq M {\left\vert x_{m - 1} - \alpha \right\vert}^2 \\
       10^{-k_m} &\leq M \cdot 10^{-2k_{m - 1}}
     \end{align*} or $k_m \geq {2 k_{m - 1}}^{-\log M}$,
     so for $M < 1$ we have $-\log M > 0$.
@@ -494,12 +495,12 @@ This basically means that the second order scheme is exponentially better than t
 
 \subsection{Higher order schemes}
 Imagine what would happen in an even better case scenario.
-Following the same pattern, assume $g'(\alpha) = g''(\alpha) = \cdots = g^{(n - 1)}(\alpha) = 0$ and $g^{(n)}(\alpha) \neq 0$, with $|g^{(n)}(x)| \leq n!\, M$
-in $|x - \alpha| \leq \rho$.
+Following the same pattern, assume $g'(\alpha) = g''(\alpha) = \cdots = g^{(n - 1)}(\alpha) = 0$ and $g^{(n)}(\alpha) \neq 0$, with $\abs{g^{(n)}(x)} \leq n!\, M$
+in $\abs{x - \alpha} \leq \rho$.
 Now consider $g(x) = \alpha + g'(\alpha)(x - \alpha) + \cdots + g^{(n)}(\xi) \frac{{(x - \alpha)}^n}{n!}$, where $\xi$ is between $x$ and $\alpha$ and all intermediate terms are 0 by our first assumption.
 Then as from before, we can express our $i$\textsuperscript{th} error as \begin{align*}
-  |x_{i + 1} - \alpha| &= \frac{\left\lvert g^{(n)}(\xi_i) \right\rvert}{n!} {\left\lvert x_i - \alpha \right\rvert}^n \\
-                       &\leq M {|x_i - \alpha|}^n
+  \abs{x_{i + 1} - \alpha} &= \frac{\abs{g^{(n)}(\xi_i)}}{n!} \abs{x_i - \alpha}^n \\
+                           &\leq M \abs{x_i - \alpha}^n
 \end{align*} by our second assumption, giving us our convergence factor.
 This is called an $n$\textsuperscript{th} order procedure.
 It multiplies the number of correct decimals by $n$ each iteration (at least asymptotically).
@@ -510,11 +511,11 @@ Thus error propagation isn't really a concern with higher order procedures.
 
 \section{Explicit iteration procedures}
 Going back to the original task of finding roots of any scalar equation $f(x) = 0$ in some interval $a \leq x \leq b$,
-let $\phi(x)$ be any function such that $0 < |\phi(x)| < \infty$.
+let $\phi(x)$ be any function such that $0 < \abs{\phi(x)} < \infty$.
 Now our placeholder function $g \equiv x - f(x)$ will be $g(x) \equiv x - \phi(x) f(x)$.
 Is this suitable for root finding (i.e.\ does a fixed point in $g$ yield a root in $f$)?
 Assuming $g(\alpha) = \alpha$, we get $\alpha = \alpha - \phi(\alpha) f(\alpha)$; that is, $\phi(\alpha) f(\alpha) = 0$.
-Since $0 < |\phi(x)|$, the only factor that can approach 0 is $f(\alpha)$, so $\alpha$ is a root of $f$.
+Since $0 < \abs{\phi(x)}$, the only factor that can approach 0 is $f(\alpha)$, so $\alpha$ is a root of $f$.
 There are many different choice of $\phi(x)$ that will lead to different iterative procedures.
 
 An alternative method of going from fixed point to root is composition.
@@ -523,13 +524,13 @@ Composition methods often describe higher order schemes.
 
 \subsection{Chord Method}
 The simplest choice for $\phi(x)$ is to let $\phi(x) \equiv m \neq 0$, where $m \in \mathbb{R}$.
-If $f$ is differentiable, by Corollary~\ref{cor:iterscalar}, we get convergence when $|g'(x)| < 1$.
+If $f$ is differentiable, by Corollary~\ref{cor:iterscalar}, we get convergence when $\abs{g'(x)} < 1$.
 Looking at $g'$, we see that \begin{align*}
   g(x) &= x - m f(x) \\
   g'(x) &= 1 - m f'(x),
 \end{align*}
 so for convergence, \begin{equation}
-  |g'(x)| = |1 - m f'(x)| < 1
+  \abs{g'(x)} = \abs{1 - m f'(x)} < 1
 \end{equation} or
 \begin{equation}\label{eqn:chordconvergence2}
   0 < m f'(x) < 2.
@@ -588,10 +589,10 @@ So by Equation~\ref{eqn:divdiff} we have \begin{displaymath}
   \alpha - x_{i + 1} = \frac{f''(\eta_i)}{2 f'(\xi_i)} (\alpha - x_i) (\alpha - x_{i - 1})
 \end{displaymath} for $i \in \mathbb{N}$,
 assuming $x_i \in I \equiv [\alpha - \rho, \alpha + \rho]$ for all $i$ and
-$\left\lvert \frac{f''(\eta)}{2 f'(\xi)} \right\rvert \leq M < \frac{1}{\rho}$ for $\eta, \xi \in I$.
+$\abs{\frac{f''(\eta)}{2 f'(\xi)}} \leq M < \frac{1}{\rho}$ for $\eta, \xi \in I$.
 
-Let $e_i \equiv M |\alpha - x_i|$, then we have \begin{align*}
-  | \alpha - x_{i + 1} | &= \left\lvert \frac{f''(\eta_i)}{2 f'(\xi_i)} \right\rvert \left\lvert \alpha - x_i \right\rvert \left\lvert \alpha - x_{i - 1} \right\rvert \\
+Let $e_i \equiv M \abs{\alpha - x_i}$, then we have \begin{align*}
+  \abs{\alpha - x_{i + 1}} &= \abs{\frac{f''(\eta_i)}{2 f'(\xi_i)}} \abs{\alpha - x_i} \abs{\alpha - x_{i - 1}} \\
   \frac{e_{i + 1}}{M} &\leq M \cdot \frac{e_i}{M} \cdot \frac{e_{i - 1}}{M} \\
   e_{i + 1} &\leq e_i e_{i - 1}.
 \end{align*}
