@@ -4,13 +4,17 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{booktabs}
-\usepackage{csquotes}
 \usepackage{hyperref}
 \usepackage{mathtools}
 \usepackage{microtype}
+\usepackage{minted}
+\usepackage{csquotes}
 \usepackage{multirow}
 \usepackage{siunitx}
+\usepackage{tikz}
 \usepackage{xparse}
+
+\usetikzlibrary{matrix}
 
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[section]
@@ -23,11 +27,13 @@
 
 \theoremstyle{remark}
 %\newtheorem*{fact}{Fact}
-%\newtheorem{claim}{Claim}
+\newtheorem{claim}{Claim}
 \newtheorem*{comment}{Comment}
 
 \NewDocumentCommand{\abs}{m}{\left\lvert#1\right\rvert}
 \NewDocumentCommand{\norm}{m}{\left\lVert#1\right\rVert}
+
+\DeclareDocumentCommand{\tran}{}{^{\mkern-1.5mu\mathsf{T}}}
 
 \begin{document}
 \noindent{}Textbooks:
@@ -552,6 +558,17 @@ Eventually this will yield a root.
 
 Note that from Equation~\ref{eqn:chordconvergence2}, we have $\frac{1}{2} f'(x) < \frac{1}{m} < \infty$, which means our slope is greater than half of the tangent line and is not vertical.
 
+\subsubsection{Implementation in Mathematica}
+\begin{minted}[mathescape]{mathematica}
+f[x_] := x^2 - 2; (* the method we want to find the root of *)
+g[x_] := x - 0.5 * f[x]; (* if it doesn't converge, make $m$ (0.5) smaller *)
+
+a = 10; (* Initial guess $x_0$ *)
+thresh = 10^(-3); (* residual kick out threshold *)
+maxiter = 10; (* maximum number of iterations *)
+For[iter = 0, iter < maxiter && Abs[f[a]] > thresh, a = g[a]; Print[a]; iter++]
+\end{minted}
+
 \subsection{Newton's Method}
 Suppose we are able to adapt the slope of our chord each iteration, so that $g'(x_i) = 1 - \phi(x_i) f'(x_i) = 0$.
 Then we have a second order method.
@@ -608,4 +625,264 @@ Define $\delta \equiv \max(e_0, e_1)$, then we can continue and get the inequali
   e_i &\leq \delta^{m_i}
 \end{align*} where $m_0 = m_1 = 1$ and $m_{i + 1} = m_i + m_{i - 1}$; i.e. $m_i$ is the $i$\textsuperscript{th} element of the Fibonacci sequence.
 We call this a golden ratio order procedure as our errors go to zero at an order of roughly 1.618.
+
+\section{Systems of Linear Equations}
+Now we look at systems of linear equations: many simple equations that have to be satisfied concurrently.
+It turns out that many mathematical problems boil down to just solving a system of linear equations.
+
+\begin{example}
+  Michael buys two bags of chips and three boxes of pretzels for \$7.
+  He then buys another bag of chips and two more boxes of pretzels for \$4.
+  Find the cost of each bag of chips and each box of pretzels.
+
+  Let $c$ be the price of one bag of chips and $p$ the price of one box of pretzels.
+  Recall that scalar multiplication and addition are linear operations, and two equations have to be satisfied at the same time, hence this is a system of two linear equations: \begin{align*}
+    2c + 3p &= 7 \\
+    c + 2p &= 4,
+  \end{align*} which can be solved by reframing in terms of matrices and vectors such that $A \vec{x} = \vec{b}$, where $A$ is the coefficient matrix, $\vec{x}$ is a vector of unknowns (or solutions), and $\vec{b}$ is a vector of constants:
+  \begin{displaymath}
+    \begin{bmatrix}
+      2 & 3 \\
+      1 & 2
+    \end{bmatrix}
+    \begin{bmatrix}
+      c \\
+      p
+    \end{bmatrix} =
+    \begin{bmatrix}
+      7 \\
+      4
+    \end{bmatrix}.
+  \end{displaymath}
+  This equation could be solved by hand using Gaussian Elimination.
+\end{example}
+
+\subsection{LU Factorization}
+Gaussian Elimination takes nonsingular (invertible) linear systems and gives an upper triangular one by applying simple linear transformations.
+
+An upper triangular matrix $U$ has $u_{ij} = 0$ when $i > j$ (zeros beneath the main diagonal), while a lower triangular matrix $L$ has $l_{ij} = 0$ when $i < j$ (zeros above the main diagonal).
+Solving the system of linear equations above becomes quite simple once $A$ has been factored into its $L$ and $U$ components.
+
+
+Let $A \in \mathbb{C}^{m \times m}$ be a square matrix.
+To go from $A$ to $U$ we need to introduce zeros below the diagonal.
+This \enquote{elimination} is done column by column, from left to right, by multiplying lower triangular matrices (linear transformations) on the left of $A$.
+The process essentially applies linear transformations to the system of linear equations in order to make a different system that is easier to solve: \begin{align*}
+  L_{m - 1} \cdots L_2 L_1 A &= U && \text{where $L_i$ has zeros in column $i$} \\
+  A &= L_1^{-1} L_2^{-1} \cdots L_{m - 1}^{-1} U \\
+  A &= LU && \text{where $L = L_1^{-1} \cdots L_{m - 1}^{-1}$}.
+\end{align*}
+Having the actual factorization of $A$ isn't necessary, but can be helpful in some other aspects.
+We will see $L$ is lower triangular due to the nature of these linear transformations.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[
+    auto,
+    Matrix/.style={matrix of nodes,align=center,left delimiter={[},right delimiter={]},inner xsep=1pt},
+    Highlight/.style={fill,rounded corners=3pt,fill opacity=0.05},
+    Line/.style={->,line width=5pt,draw opacity=0.3},
+    ]
+
+    \matrix[Matrix,label=$A$] at (0,0) (A) {
+      X & X & X & X \\
+      X & X & X & X \\
+      X & X & X & X \\
+      X & X & X & X \\
+    };
+    \matrix[Matrix,label=$\textcolor{blue}{L_1} A$] at (4,0) (LA) {
+      X & X & X & X \\
+      0 & X & X & X \\
+      0 & X & X & X \\
+      0 & X & X & X \\
+    };
+    \matrix[Matrix,label=$\textcolor{red}{L_2} \textcolor{blue}{L_1} A$] at (8,0) (LLA) {
+      X & X & X & X \\
+      0 & X & X & X \\
+      0 & 0 & X & X \\
+      0 & 0 & X & X \\
+    };
+    \matrix[Matrix,label=$\textcolor{green}{L_3} \textcolor{red}{L_2} \textcolor{blue}{L_1} A$] at (12,0) (LLLA) {
+      X & X & X & X \\
+      0 & X & X & X \\
+      0 & 0 & X & X \\
+      0 & 0 & 0 & X \\
+    };
+
+    \draw[Highlight,blue]  (  LA-2-2.north west) rectangle (  LA-4-4.south east);
+    \draw[Highlight,blue]  ( LLA-2-2.north west) rectangle ( LLA-2-4.south east);
+    \draw[Highlight,red]   ( LLA-3-3.north west) rectangle ( LLA-4-4.south east);
+    \draw[Highlight,blue]  (LLLA-2-2.north west) rectangle (LLLA-2-4.south east);
+    \draw[Highlight,red]   (LLLA-3-3.north west) rectangle (LLLA-3-4.south east);
+    \draw[Highlight,green] (LLLA-4-4.north west) rectangle (LLLA-4-4.south east);
+
+    \draw[Line,blue]    (A) -- (LA) node   [midway,above] {\textcolor{blue}  {$L_1$}};
+    \draw[Line,red]    (LA) -- (LLA) node  [midway,above] {\textcolor{red}   {$L_2$}};
+    \draw[Line,green] (LLA) -- (LLLA) node [midway,above] {\textcolor{green} {$L_3$}};
+  \end{tikzpicture}
+  \caption{The linear transformations performed when factoring a $4 \times 4$ matrix $A$ into its upper triangular form.
+    Non-zero values are represented by $X$, with highlighted regions showing which values change as linear transformations are applied.
+  }
+\end{figure}
+
+In general, the $k$\textsuperscript{th} linear transformation introduces zeros below the diagonal in column $k$.
+It does this by subtracting multiples of row $k$ from rows under row $k$.
+Since columns $1, \dots, k$ already have zeros in the proper location, the transformation does not introduce nonzeros into those elements.
+
+\begin{example}
+  Now that we understand shape, let \begin{displaymath}
+    A = \begin{bmatrix}
+      2 & 1 & 1 & 0 \\
+      4 & 3 & 3 & 1 \\
+      8 & 7 & 9 & 5 \\
+      6 & 7 & 9 & 8
+    \end{bmatrix}.
+  \end{displaymath}
+  The first step is to introduce zeros into the first column: \begin{displaymath}
+    L_1 A = \underbrace{\begin{bmatrix*}[r]
+        1 & 0 & 0 & 0 \\
+        -2 & 1 & 0 & 0 \\
+        -4 & 0 & 1 & 0 \\
+        -3 & 0 & 0 & 1
+    \end{bmatrix*}}_{L_1}
+    \underbrace{\begin{bmatrix}
+        2 & 1 & 1 & 0 \\
+        4 & 3 & 3 & 1 \\
+        8 & 7 & 9 & 5 \\
+        6 & 7 & 9 & 8
+    \end{bmatrix}}_A =
+    \begin{bmatrix}
+      2 & 1 & 1 & 0 \\
+      0 & 1 & 1 & 1 \\
+      0 & 3 & 5 & 5 \\
+      0 & 4 & 6 & 8
+    \end{bmatrix},
+  \end{displaymath}
+  then do the same with the second column: \begin{displaymath}
+    L_2 L_1 A = \underbrace{\begin{bmatrix*}[r]
+        1 & 0 & 0 & 0 \\
+        0 & 1 & 0 & 0 \\
+        0 & -3 & 1 & 0 \\
+        0 & -4 & 0 & 1
+    \end{bmatrix*}}_{L_2}
+    \underbrace{\begin{bmatrix}
+        2 & 1 & 1 & 0 \\
+        0 & 1 & 1 & 1 \\
+        0 & 3 & 5 & 5 \\
+        0 & 4 & 6 & 8
+    \end{bmatrix}}_{L_1 A} =
+    \begin{bmatrix}
+      2 & 1 & 1 & 0 \\
+      0 & 1 & 1 & 1 \\
+      0 & 0 & 2 & 2 \\
+      0 & 0 & 2 & 4
+    \end{bmatrix},
+  \end{displaymath}
+  and the third column: \begin{displaymath}
+    L_3 L_2 L_1 A =
+    \underbrace{\begin{bmatrix*}[r]
+        1 & 0 & 0 & 0 \\
+        0 & 1 & 0 & 0 \\
+        0 & 0 & 1 & 0 \\
+        0 & 0 & -1 & 1
+    \end{bmatrix*}}_{L_3}
+    \underbrace{\begin{bmatrix}
+        2 & 1 & 1 & 0 \\
+        0 & 1 & 1 & 1 \\
+        0 & 0 & 2 & 2 \\
+        0 & 0 & 2 & 4
+    \end{bmatrix}}_{L_2 L_1 A} =
+    \begin{bmatrix}
+      2 & 1 & 1 & 0 \\
+      0 & 1 & 1 & 1 \\
+      0 & 0 & 2 & 2 \\
+      0 & 0 & 0 & 2
+    \end{bmatrix}.
+  \end{displaymath}
+\end{example}
+It is trivial to compute $L = L_1^{-1} L_2^{-1} L_3^{-1}$, as the inverse of a matrix in this form is simply the non-diagonal elements negated, so: \begin{displaymath}
+  L = \begin{bmatrix}
+    1 & 0 & 0 & 0 \\
+    2 & 1 & 0 & 0 \\
+    4 & 3 & 1 & 0 \\
+    3 & 4 & 1 & 1
+  \end{bmatrix}.
+\end{displaymath}
+
+\subsubsection{General Formula}
+Suppose $x_k$ denotes the $k$\textsuperscript{th} column of the matrix.
+Choose $L_k$ so that there are zeros everywhere below the diagonal element $x_{k k}$.
+To do this, subtract $l_{jk}$ multiplied by row $k$ from row $j$, where $l_{jk} = \frac{x_{jk}}{x_{kk}}$ (the element to get rid of divided by the diagonal element) for all $j > k$.
+We can verify that \begin{align*}
+  L_k \cdot x_{k} &= -l_{k + 1, k} \cdot x_{kk} + i1 \cdot x_{k + 1, k} \\
+                  &= - \frac{x_{k + 1, k}}{x_{kk}} \cdot x_{kk} + x_{k + 1,k} && \text{by the definition of $l$ above} \\
+                  &= - x_{k + 1, k} + x_{k + 1,k} \\
+                  &= 0,
+\end{align*} which is what we expected.
+
+\begin{claim}
+  Two nice properties allow for a quick lower triangular matrix factorization:
+  $L_k$ can be inverted by negating the subdiagonal entries ($l_{jk}^{-1} = -l_{jk}$ for $j > k$), and
+  $L$ can be formed by inserting $L_k$ into $I$ below the diagonal (creating a matrix with $l_{jk}$ in the subdiagonal and 1 on main diagonal).
+
+  \begin{proof}
+    Define $l_k = \begin{bmatrix}
+      0 & \cdots & 0 & l_{k + 1, k} & \cdots & l_{mk}
+    \end{bmatrix}\tran$, which is the $k$\textsuperscript{th} transformation without the 1 in the diagonal element.
+    This gives us the nice representation $L_k = I - l_k \cdot e_k\tran$, where $e_k$ is the standard basis vector.
+    Note that $l_k$ is a $m \times 1$ matrix, and $e_k\tran$ is a $1 \times m$ matrix, so the dimensions of the outer product $l_k \cdot e_k\tran$ are $m \times m$.
+    By the same reasoning, the dot product $e_k\tran \cdot l_k$ is a scalar: \begin{align*}
+      e_k \cdot l_k &= 0 \cdot 0 + \cdots + 1 \cdot 0 + 0 \cdot l_{k + 1, k} + \cdots + 0 \cdot l_{mk} \\
+                    &= 0,
+    \end{align*} and therefore
+    \begin{align*}
+      L_k * L_k^{-1} &= (I - l_k e_k\tran) (I + l_k e_k\tran) \\
+                     &= I + l_k e_k\tran - l_k e_k\tran - l_k e_k\tran l_k e_k\tran && \text{by the distributive property} \\
+                     &= I - l_k e_k\tran l_k e_k\tran \\
+                     &= I - l_k (e_k\tran l_k) e_k\tran && \text{by associativity of matrix multiplication} \\
+                     &= I && \text{as the dot product is 0},
+    \end{align*} showing that $L_k^{-1} = I + l_k e_k\tran$ is indeed the inverse of $L_k$.
+
+    For the second part, consider the product \begin{align*}
+      L_k^{-1} L_{k + 1}^{-1} &= (I + l_k e_k\tran) (I + l_{k + 1} e_{k + 1}\tran) \\
+                              &= I + l_k e_k\tran + l_{k + 1} e_{k + 1}\tran + l_k e_k\tran l_{k + 1} e_{k + 1}\tran && \text{by the distributive property} \\
+                              &= I + l_k e_k\tran + l_{k + 1} e_{k + 1}\tran + l_k (e_k\tran l_{k + 1}) e_{k + 1}\tran && \text{by associativity} \\
+                              &= I + l_k e_k\tran + l_{k + 1} e_{k + 1}\tran && \text{as the dot product is 0}.
+    \end{align*}
+    In other words, $L_k^{-1} L_{k + 1}^{-1}$ is the identity matrix, plus the $k$\textsuperscript{th} and $(k + 1)$\textsuperscript{th} columns beneath their respective diagonal elements.
+    This is a \enquote{unit} lower triangular matrix.
+    It follows that the multipliers are put into the subdiagonal elements of the lower triangular matrix $L$ by the multiplier
+    \begin{displaymath}
+      L = L_1^{-1} L_2^{-1} \cdots L_{m - 1}^{-1} = \begin{bmatrix}
+        1       &        &        &             &   \\
+        l_{21}  & 1      &        &             &   \\
+        l_{31}  & l_{32} & \ddots &             &   \\
+        \vdots  & \vdots & \ddots & 1           &   \\
+        l_{m1}  & l_{m2} & \cdots & l_{m,m - 1} & 1
+      \end{bmatrix}.
+      \qedhere
+    \end{displaymath}
+  \end{proof}
+
+  Due to these two properties, $L_k$ is never formed and multiplied, and $l_{jk} = \frac{x_{jk}}{x_{kk}}$ for $j > k$.
+  Note that the diagonal entries $x_{kk}$ change every time a linear transformation is applied.
+\end{claim}
+
+\subsubsection{LU Algorithm}
+A more robust implementation of this is available in Julia as \mintinline{julia}{LinearAlgebra.lu(A)::LU}.
+\begin{minted}{julia}
+function lu(A)
+    U = copy(A)
+    L = one(A) # identity matrix of same dims
+    m = size(A,1)
+    for k in 1:(m - 1) # no entries below diagonal in the last column
+        for j in (k + 1):m
+            L[j, k] = U[j, k] / U[k, k]
+            U[j, k:m] -= L[j, k] * U[k, k:m]
+        end
+    end
+    L, U
+end
+\end{minted}
+
 \end{document}
